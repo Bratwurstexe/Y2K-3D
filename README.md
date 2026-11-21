@@ -1,5 +1,9 @@
 <div align="center">
 
+<a href="https://github.com/Bratwurstexe/Y2K-3D/releases/latest/download/Y2K-3D.exe"><img src="https://img.shields.io/badge/Download-Y2K--3D.exe%20(portable%2C%20Windows%2010%2F11%2064--bit)-E07A55?style=for-the-badge&logo=windows&logoColor=white" alt="Download Y2K-3D.exe – portable, Windows 10/11 64-bit"></a>
+
+<sub>Direct download of the latest portable version – no installation, just double-click. &nbsp;·&nbsp; <a href="https://github.com/Bratwurstexe/Y2K-3D/releases/latest">all release files</a></sub>
+
 # Y2K-3D
 
 **A native Windows 3D landscape studio: build worlds from terrains, skies, water and objects, then ray-trace them into pictures and animations.**
@@ -15,7 +19,7 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![Portable](https://img.shields.io/badge/install-none%20(portable)-success)
 
-**[Download the latest version](https://github.com/Bratwurstexe/Y2K-3D/releases/latest)** &nbsp;·&nbsp; ![Downloads](https://img.shields.io/github/downloads/Bratwurstexe/Y2K-3D/total?label=&color=orange&style=flat-square) downloads so far
+**[Download Y2K-3D.exe](https://github.com/Bratwurstexe/Y2K-3D/releases/latest/download/Y2K-3D.exe)** &nbsp;·&nbsp; ![Downloads](https://img.shields.io/github/downloads/Bratwurstexe/Y2K-3D/total?label=&color=orange&style=flat-square) downloads so far
 
 <img src="docs/images/hero.png" alt="Golden-hour demo scene rendered with Y2K-3D" width="100%">
 
@@ -94,7 +98,7 @@ No Visual C++ redistributable, .NET or other runtime is needed: the program only
 
 ## Download & run
 
-1. Open the [**Releases**](https://github.com/Bratwurstexe/Y2K-3D/releases) page and download `Y2K-3D.exe`.
+1. Download [**Y2K-3D.exe**](https://github.com/Bratwurstexe/Y2K-3D/releases/latest/download/Y2K-3D.exe) (always the latest version; all files are on the [Releases](https://github.com/Bratwurstexe/Y2K-3D/releases) page).
 2. Put it in any folder (a USB stick works too) and double-click it.
 3. If Windows SmartScreen warns about an unknown publisher, click **More info**, then **Run anyway** (the program isn't code-signed).
 
