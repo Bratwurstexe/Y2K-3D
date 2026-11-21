@@ -10,7 +10,6 @@
 
 Inspired by the classic landscape renderers of the late 1990s, rebuilt from scratch for Windows 11, with an optional AI assistant you can talk to.
 
-[![Build](https://github.com/Bratwurstexe/Y2K-3D/actions/workflows/build.yml/badge.svg)](https://github.com/Bratwurstexe/Y2K-3D/actions/workflows/build.yml)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6?logo=windows)
 ![Rust](https://img.shields.io/badge/made%20with-Rust-B7410E?logo=rust)
 ![egui](https://img.shields.io/badge/UI-egui-6E56CF)
