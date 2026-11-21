@@ -540,7 +540,7 @@ fn hit_torus(o: Vec3, d: Vec3, tmax: f32) -> Option<(f32, Vec3)> {
     let dn = d / len;
     let t0 = bb.hit(o, Vec3::ONE / dn, tmax * len)?;
     let mut t = t0;
-    for _ in 0..96 {
+    for _ in 0..200 {
         let p = o + dn * t;
         let q = (p.x * p.x + p.z * p.z).sqrt() - R;
         let sd = (q * q + p.y * p.y).sqrt() - RR;
@@ -554,7 +554,7 @@ fn hit_torus(o: Vec3, d: Vec3, tmax: f32) -> Option<(f32, Vec3)> {
             t += 0.01;
             continue;
         }
-        t += sd * 0.9;
+        t += sd * 0.95;
         if t > tmax * len || t > 6.0 + t0 {
             break;
         }
@@ -888,7 +888,10 @@ impl Prepared {
         let ob = &self.objs[h.obj];
         let m = &ob.mat;
         let p = o + d * h.t;
-        let (base, alpha) = texture(m, ob, p, h, ob.picture.as_deref());
+        let (mut base, alpha) = texture(m, ob, p, h, ob.picture.as_deref());
+        if m.texture == TexKind::Iridescent {
+            base = iridescent(m, (-d).dot(h.n).abs(), p);
+        }
         let mut n = h.n;
         let geo_front = n.dot(d) < 0.0;
         if m.bump > 0.0 {
@@ -1004,6 +1007,9 @@ impl Prepared {
         } else if alpha < 0.999 {
             col = self.sky_color(d).lerp(col, alpha);
         }
+        if m.glow > 0.0 {
+            col += base * m.glow;
+        }
         col
     }
 
@@ -1011,6 +1017,20 @@ impl Prepared {
         let (o, d) = self.view.ray(sx, sy);
         self.trace(o, d, 0)
     }
+}
+
+/// Holographic colour that shifts with the viewing angle (thin-film look), tinted by the
+/// material's colours; tex_scale sets how strongly it shimmers.
+fn iridescent(m: &Material, cos_view: f32, p: Vec3) -> Vec3 {
+    let k = m.tex_scale.clamp(0.0, 2.0);
+    let hue = (1.0 - cos_view) * 1.4 + noise(p * 0.7) * 0.15;
+    let tau = std::f32::consts::TAU;
+    let rainbow = Vec3::new(
+        0.5 + 0.5 * (tau * (hue + 0.0)).cos(),
+        0.5 + 0.5 * (tau * (hue + 0.33)).cos(),
+        0.5 + 0.5 * (tau * (hue + 0.67)).cos(),
+    );
+    v3(m.diffuse).lerp(rainbow * v3(m.color2), (0.35 + 0.4 * k).min(1.0))
 }
 
 fn smoothstep(a: f32, b: f32, x: f32) -> f32 {
@@ -1039,7 +1059,7 @@ fn texture(
     let c2 = v3(m.color2);
     let q = tex_coord(ob, p, h, m.tex_scale.max(0.01));
     match m.texture {
-        TexKind::None => (c1, 1.0),
+        TexKind::None | TexKind::Iridescent => (c1, 1.0),
         TexKind::Noise => (c2.lerp(c1, fbm(q * 2.0, 5) * 0.5 + 0.5), 1.0),
         TexKind::Marble => {
             let t = (q.x * 3.0 + q.y * 1.5 + fbm(q * 1.5, 6) * 7.0).sin() * 0.5 + 0.5;
@@ -1388,8 +1408,29 @@ pub fn render_frame(scene: &Scene) -> image::RgbaImage {
     let h = scene.render.height as usize;
     let view = View::from_camera(&scene.camera, w as f32 / h as f32);
     let prep = prepare(scene, view, None);
-    let buf = render_image(&prep, w, h);
-    image::RgbaImage::from_raw(w as u32, h as u32, buf).unwrap()
+    if !scene.render.antialias {
+        let buf = render_image(&prep, w, h);
+        return image::RgbaImage::from_raw(w as u32, h as u32, buf).unwrap();
+    }
+    // 2 x 2 samples per pixel, averaged in linear values
+    let offs = [(0.25, 0.25), (0.75, 0.25), (0.25, 0.75), (0.75, 0.75)];
+    let rows: Vec<Vec<u8>> = (0..h)
+        .into_par_iter()
+        .map(|y| {
+            let mut row = Vec::with_capacity(w * 4);
+            for x in 0..w {
+                let mut c = Vec3::ZERO;
+                for (ox, oy) in offs {
+                    let sx = (x as f32 + ox) / w as f32 * 2.0 - 1.0;
+                    let sy = 1.0 - (y as f32 + oy) / h as f32 * 2.0;
+                    c += prep.pixel(sx, sy).clamp(Vec3::ZERO, Vec3::ONE);
+                }
+                row.extend_from_slice(&to_rgba(c / 4.0));
+            }
+            row
+        })
+        .collect();
+    image::RgbaImage::from_raw(w as u32, h as u32, rows.concat()).unwrap()
 }
 
 #[cfg(test)]

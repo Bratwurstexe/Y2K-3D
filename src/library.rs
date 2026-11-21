@@ -31,7 +31,51 @@ pub struct Asset {
     pub id: String,
     pub name: String,
     pub categories: Vec<String>,
+    pub tags: Vec<String>,
     pub thumb: String,
+}
+
+/// Words that point to the glossy, metallic, synthetic look of Y2K-era 3D.
+const Y2K_WORDS: [&str; 16] = [
+    "metal",
+    "chrome",
+    "steel",
+    "alumin",
+    "plastic",
+    "glass",
+    "terrazzo",
+    "rubber",
+    "foil",
+    "carbon",
+    "neon",
+    "holo",
+    "iridescent",
+    "lacquer",
+    "glossy",
+    "mirror",
+];
+
+fn strings(v: &Value) -> Vec<String> {
+    v.as_array()
+        .map(|c| {
+            c.iter()
+                .filter_map(|x| x.as_str().map(|s| s.to_lowercase()))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+impl Asset {
+    fn is_y2k(&self) -> bool {
+        let hay = format!(
+            "{} {} {}",
+            self.name,
+            self.categories.join(" "),
+            self.tags.join(" ")
+        )
+        .to_lowercase();
+        Y2K_WORDS.iter().any(|w| hay.contains(w))
+    }
 }
 
 impl Asset {
@@ -133,6 +177,7 @@ fn polyhaven_index(kind: AssetKind) -> Result<Vec<Asset>, String> {
             kind,
             id: id.clone(),
             name: a["name"].as_str().unwrap_or(id).to_string(),
+            tags: strings(&a["tags"]),
             categories: a["categories"]
                 .as_array()
                 .map(|c| {
@@ -171,6 +216,7 @@ fn ambientcg_index() -> Result<Vec<Asset>, String> {
                 source: Source::AmbientCg,
                 kind: AssetKind::Texture,
                 name: a["displayName"].as_str().unwrap_or(&id).to_string(),
+                tags: strings(&a["tags"]),
                 categories: a["displayCategory"]
                     .as_str()
                     .map(|c| vec![c.to_lowercase()])
@@ -471,6 +517,7 @@ pub struct LibraryWindow {
     tab: Tab,
     search: String,
     category: String,
+    y2k_only: bool,
     indexes: HashMap<u8, Pending<Vec<Asset>>>,
     thumbs: Arc<Thumbs>,
     textures: HashMap<String, TextureHandle>,
@@ -497,6 +544,7 @@ impl LibraryWindow {
             tab: Tab::PolyHavenTextures,
             search: String::new(),
             category: String::new(),
+            y2k_only: true,
             indexes: HashMap::new(),
             thumbs: Thumbs::new(),
             textures: HashMap::new(),
@@ -732,6 +780,18 @@ impl LibraryWindow {
         };
         cats.sort_by(|a, b| b.1.cmp(&a.1));
         ui.horizontal_wrapped(|ui| {
+            if ui
+                .selectable_label(
+                    self.y2k_only,
+                    RichText::new(tr("Y2K-Look")).strong().color(Color32::from_rgb(255, 150, 220)),
+                )
+                .on_hover_text(tr(
+                    "Nur Glänzendes, Metallisches, Glas, Kunststoff und Fliesen – passend zur Y2K-Ästhetik",
+                ))
+                .clicked()
+            {
+                self.y2k_only = !self.y2k_only;
+            }
             ui.label(RichText::new(tr("Kategorien:")).small().weak());
             for (c, n) in cats.iter().take(18) {
                 if ui
@@ -752,6 +812,7 @@ impl LibraryWindow {
         let q = self.search.to_lowercase();
         let shown: Vec<&Asset> = assets
             .iter()
+            .filter(|a| !self.y2k_only || a.kind == AssetKind::Model || a.is_y2k())
             .filter(|a| {
                 self.category.is_empty() || a.categories.iter().any(|c| c == &self.category)
             })

@@ -8,7 +8,7 @@
 
 **A native Windows 3D landscape studio: build worlds from terrains, skies, water and objects, then ray-trace them into pictures and animations.**
 
-Inspired by the classic landscape renderers of the late 1990s, rebuilt from scratch for Windows 11, with an optional AI assistant you can talk to.
+Chrome, gloss, holographic shimmer and checkerboard floors: the look of late-90s 3D, rebuilt from scratch for Windows 11, with an optional AI assistant you can talk to.
 
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6?logo=windows)
 ![Rust](https://img.shields.io/badge/made%20with-Rust-B7410E?logo=rust)
@@ -20,9 +20,9 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 
 **[Download Y2K-3D.exe](https://github.com/Bratwurstexe/Y2K-3D/releases/latest/download/Y2K-3D.exe)**
 
-<img src="docs/images/hero.png" alt="Golden-hour demo scene rendered with Y2K-3D" width="100%">
+<img src="docs/images/hero.png" alt="Y2K showcase scene rendered with Y2K-3D" width="100%">
 
-*The demo scene Y2K-3D opens with, rendered in about a second on a desktop CPU.*
+*The Y2K showcase scene the program opens with – chrome, holographic and glass materials under a vaporwave sky, rendered in about a second on a desktop CPU.*
 
 </div>
 
@@ -50,8 +50,8 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 | | |
 |---|---|
 | **Terrain editor** | Fractal mountains, hills, ridges, canyons, dunes and craters; hydraulic & thermal erosion; smoothing, terraces, spikes, island edges; a filter curve; a paint brush; height maps from any picture (including old 8-bit palette TIFFs). Live 3D preview. |
-| **Sky & Fog** | Sun or moon position on a draggable ball, sky / horizon / sunlight colours, procedural clouds (cover, frequency, softness, height), atmospheric haze, height fog, stars. Ten presets from clear noon to moonlit night, plus memory dots. |
-| **Materials Lab** | Diffusion, ambience, specularity, metallic tint, bump, transparency, reflection and refraction; procedural textures (noise, marble, wood, granite, checker, stripes, height-based landscape, clouds) or picture textures. Twenty presets with live sphere previews. |
+| **Sky & Fog** | Sun or moon position on a draggable ball, sky / horizon / sunlight colours, procedural clouds (cover, frequency, softness, height), atmospheric haze, height fog, stars. Fourteen presets, from clear noon and moonlit night to **Vaporwave**, **Cyber sky**, **Holo pastel** and **Millennium night**, plus memory dots. |
+| **Materials Lab** | Diffusion, ambience, specularity, metallic tint, bump, transparency, reflection and refraction; procedural textures (noise, marble, wood, granite, checker, stripes, height-based landscape, clouds) or picture textures; an **iridescent / holographic** shader and a **glow** channel for neon. Presets include Y2K chrome, holographic, mother of pearl, bubblegum plastic, frosted aqua glass, liquid metal, neon pink / lime and a glossy Y2K checkerboard, all with live sphere previews. |
 | **Ray tracer** | Multi-threaded and progressive (coarse blocks first, then fine detail, then adaptive anti-aliasing). Shadows, reflections, refraction, Fresnel water, spot / point / parallel lights. Fast height-field traversal and BVH-accelerated meshes. |
 | **Objects** | Sphere, cube, cylinder, cone, torus, pyramid, disk, square, procedural stones, infinite ground / water / cloud planes, picture objects with alpha cut-outs, imported OBJ, DXF, glTF / GLB and STL models. |
 | **Online library** | Browse, search and download free CC0 assets right inside the program: 870+ textures and 520+ 3D models from Poly Haven, 1000 materials from ambientCG. Apply a texture to the selected object with one click, turn a texture's height map into a new terrain, or drop a model into the scene. |
@@ -77,11 +77,11 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 <td width="50%"><img src="docs/images/ui-library.png" alt="Online library"><br><sub><b>Online library</b> – free CC0 textures and models from Poly Haven and ambientCG.</sub></td>
 </tr>
 <tr>
-<td width="50%"><img src="docs/images/render-sunset.png" alt="Sunset render"><br><sub><b>Sunset</b> – the same scene with a different sky preset.</sub></td>
+<td width="50%"><img src="docs/images/render-cyber.png" alt="Cyber sky render"><br><sub><b>Cyber sky</b> – the showcase scene with another sky preset.</sub></td>
 </tr>
 <tr>
-<td width="50%"><img src="docs/images/render-night.png" alt="Moonlit night render"><br><sub><b>Moonlit night</b></sub></td>
-<td width="50%"><img src="docs/images/render-alien.png" alt="Alien planet render"><br><sub><b>Alien planet</b></sub></td>
+<td width="50%"><img src="docs/images/render-millennium.png" alt="Millennium night render"><br><sub><b>Millennium night</b></sub></td>
+<td width="50%"><img src="docs/images/render-landscape.png" alt="Landscape render"><br><sub><b>Landscape at golden hour</b> – the second demo scene (File → Demo scenes).</sub></td>
 </tr>
 </table>
 
@@ -231,6 +231,8 @@ What you can do with an entry:
 - **Apply to selection** – puts the texture on the selected object.
 - **As terrain (height map)** – creates a new terrain from the texture's height map and paints it with the texture (great with Poly Haven's *aerial* and *terrain* sets).
 - **Load into scene** – downloads a 3D model and places it on the ground.
+
+The **Y2K look** switch (on by default) narrows the texture catalogues to glossy, metallic, glass and plastic surfaces that fit the aesthetic; switch it off to see everything.
 
 Downloads are cached in `Daten\Bibliothek` next to the program, so each asset is fetched only once and stays available offline. Downloaded textures also appear in the Materials Lab's picture list.
 

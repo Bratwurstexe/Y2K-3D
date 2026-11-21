@@ -1,6 +1,6 @@
 [package]
 name = "y2k-3d"
-version = "1.1.0"
+version = "1.2.0"
 edition = "2021"
 description = "A native Windows 3D landscape studio: terrains, skies, materials, a ray tracer, keyframe animation and a built-in Claude assistant."
 license = "MIT"

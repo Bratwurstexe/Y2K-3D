@@ -1282,6 +1282,25 @@ impl App {
                     ui.close();
                 }
                 ui.separator();
+                ui.menu_button(crate::i18n::tr("Demoszenen"), |ui| {
+                    if ui.button(crate::i18n::tr("Y2K-Showcase")).clicked() {
+                        self.undo.push(self.scene.clone());
+                        self.scene = Scene::demo();
+                        self.selected = None;
+                        self.rev += 1;
+                        ui.close();
+                    }
+                    if ui
+                        .button(crate::i18n::tr("Landschaft im Abendlicht"))
+                        .clicked()
+                    {
+                        self.undo.push(self.scene.clone());
+                        self.scene = Scene::demo_landscape();
+                        self.selected = None;
+                        self.rev += 1;
+                        ui.close();
+                    }
+                });
                 if ui.button(crate::i18n::tr("Online-Bibliothek…")).clicked() {
                     ui.close();
                     self.library.open = true;

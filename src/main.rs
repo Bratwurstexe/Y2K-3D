@@ -68,6 +68,8 @@ fn main() -> eframe::Result {
         if let (Some(src), Some(out)) = (args.get(i + 1), args.get(i + 2)) {
             let scene = if src == "demo" {
                 scene::Scene::demo()
+            } else if src == "demo-landscape" {
+                scene::Scene::demo_landscape()
             } else {
                 match std::fs::read_to_string(src)
                     .ok()

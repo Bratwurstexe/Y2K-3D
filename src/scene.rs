@@ -132,10 +132,11 @@ pub enum TexKind {
     Altitude,
     Clouds,
     Image,
+    Iridescent,
 }
 
 impl TexKind {
-    pub const ALL: [TexKind; 10] = [
+    pub const ALL: [TexKind; 11] = [
         TexKind::None,
         TexKind::Noise,
         TexKind::Marble,
@@ -146,6 +147,7 @@ impl TexKind {
         TexKind::Altitude,
         TexKind::Clouds,
         TexKind::Image,
+        TexKind::Iridescent,
     ];
     pub fn label(self) -> &'static str {
         match self {
@@ -159,6 +161,7 @@ impl TexKind {
             TexKind::Altitude => crate::i18n::tr("Landschaft (Höhe)"),
             TexKind::Clouds => crate::i18n::tr("Wolken"),
             TexKind::Image => crate::i18n::tr("Bild"),
+            TexKind::Iridescent => crate::i18n::tr("Schillernd (holografisch)"),
         }
     }
     #[allow(dead_code)]
@@ -174,6 +177,7 @@ impl TexKind {
             TexKind::Altitude => "landscape",
             TexKind::Clouds => "clouds",
             TexKind::Image => "image",
+            TexKind::Iridescent => "iridescent",
         }
     }
 }
@@ -197,6 +201,9 @@ pub struct Material {
     pub tex_scale: f32,
     #[serde(default)]
     pub image: Option<String>,
+    /// Light the surface gives off by itself (neon look).
+    #[serde(default)]
+    pub glow: f32,
 }
 
 impl Default for Material {
@@ -218,6 +225,7 @@ impl Default for Material {
             texture: TexKind::None,
             tex_scale: 1.0,
             image: None,
+            glow: 0.0,
         }
     }
 }
@@ -454,6 +462,113 @@ pub fn material_presets() -> Vec<Material> {
                 [0.6, 0.1, 0.1],
                 TexKind::None,
                 1.0,
+            )
+        },
+        // --- Y2K look
+        Material {
+            specularity: 1.0,
+            metallicity: 1.0,
+            reflection: 0.85,
+            ..mat(
+                "Y2K Chrom",
+                [0.72, 0.82, 1.0],
+                [0.5, 0.6, 0.9],
+                TexKind::None,
+                1.0,
+            )
+        },
+        Material {
+            specularity: 1.0,
+            metallicity: 0.6,
+            reflection: 0.45,
+            ..mat(
+                "Holografisch",
+                [0.9, 0.88, 1.0],
+                [1.0, 1.0, 1.0],
+                TexKind::Iridescent,
+                1.0,
+            )
+        },
+        Material {
+            specularity: 0.8,
+            metallicity: 0.2,
+            reflection: 0.2,
+            ..mat(
+                "Perlmutt",
+                [0.96, 0.94, 0.92],
+                [1.0, 1.0, 1.0],
+                TexKind::Iridescent,
+                0.5,
+            )
+        },
+        Material {
+            specularity: 1.0,
+            reflection: 0.15,
+            ..mat(
+                "Bubblegum",
+                [1.0, 0.42, 0.76],
+                [0.8, 0.3, 0.6],
+                TexKind::None,
+                1.0,
+            )
+        },
+        Material {
+            specularity: 1.0,
+            reflection: 0.12,
+            transparency: 0.8,
+            refraction: 1.45,
+            ..mat(
+                "Eisglas Aqua",
+                [0.55, 0.95, 1.0],
+                [0.4, 0.8, 0.9],
+                TexKind::None,
+                1.0,
+            )
+        },
+        Material {
+            specularity: 0.8,
+            glow: 0.65,
+            ..mat(
+                "Neon Limette",
+                [0.62, 1.0, 0.18],
+                [0.4, 0.8, 0.1],
+                TexKind::None,
+                1.0,
+            )
+        },
+        Material {
+            specularity: 0.8,
+            glow: 0.7,
+            ..mat(
+                "Neon Pink",
+                [1.0, 0.2, 0.78],
+                [0.8, 0.1, 0.6],
+                TexKind::None,
+                1.0,
+            )
+        },
+        Material {
+            specularity: 1.0,
+            metallicity: 1.0,
+            reflection: 0.8,
+            bump: 0.25,
+            ..mat(
+                "Flüssigmetall",
+                [0.86, 0.86, 0.92],
+                [0.86, 0.86, 0.92],
+                TexKind::Noise,
+                1.5,
+            )
+        },
+        Material {
+            specularity: 0.7,
+            reflection: 0.3,
+            ..mat(
+                "Y2K Schachbrett",
+                [1.0, 0.55, 0.86],
+                [0.3, 0.82, 1.0],
+                TexKind::Checker,
+                1.4,
             )
         },
     ];
@@ -818,6 +933,66 @@ pub fn sky_presets() -> Vec<Sky> {
             stars: true,
             ..d.clone()
         },
+        // --- Y2K look
+        Sky {
+            name: "Vaporwave".into(),
+            sun_azimuth: 180.0,
+            sun_elevation: 9.0,
+            zenith: [0.22, 0.07, 0.45],
+            horizon: [1.0, 0.45, 0.72],
+            sun_color: [1.0, 0.6, 0.82],
+            ambient: [0.6, 0.45, 0.65],
+            sun_intensity: 1.1,
+            haze: 0.22,
+            haze_color: [1.0, 0.52, 0.8],
+            cloud_cover: 0.25,
+            cloud_color: [1.0, 0.72, 0.95],
+            ..d.clone()
+        },
+        Sky {
+            name: "Cyber-Himmel".into(),
+            sun_azimuth: 200.0,
+            sun_elevation: 45.0,
+            zenith: [0.0, 0.32, 0.75],
+            horizon: [0.55, 0.95, 1.0],
+            sun_color: [0.88, 1.0, 1.0],
+            ambient: [0.5, 0.66, 0.82],
+            haze: 0.1,
+            haze_color: [0.6, 0.95, 1.0],
+            cloud_cover: 0.3,
+            ..d.clone()
+        },
+        Sky {
+            name: "Holo-Pastell".into(),
+            sun_azimuth: 220.0,
+            sun_elevation: 30.0,
+            zenith: [0.55, 0.7, 1.0],
+            horizon: [1.0, 0.86, 0.95],
+            sun_color: [1.0, 0.95, 1.0],
+            ambient: [0.72, 0.66, 0.82],
+            haze: 0.2,
+            haze_color: [0.95, 0.86, 1.0],
+            cloud_cover: 0.45,
+            cloud_color: [1.0, 0.9, 1.0],
+            ..d.clone()
+        },
+        Sky {
+            name: "Millennium-Nacht".into(),
+            sun_azimuth: 160.0,
+            sun_elevation: 25.0,
+            zenith: [0.02, 0.02, 0.12],
+            horizon: [0.16, 0.05, 0.36],
+            sun_color: [0.6, 0.8, 1.0],
+            sun_intensity: 0.6,
+            sun_visible: false,
+            ambient: [0.28, 0.22, 0.48],
+            haze: 0.15,
+            haze_color: [0.3, 0.2, 0.6],
+            cloud_cover: 0.1,
+            cloud_color: [0.4, 0.3, 0.6],
+            stars: true,
+            ..d.clone()
+        },
     ]
 }
 
@@ -940,7 +1115,140 @@ impl Scene {
 
     /// The scene the program opens with: an eroded mountain range above a lake at golden hour,
     /// with a few showpieces in the foreground.
+    /// The scene the program opens with: a late-90s chrome-and-gloss showcase.
     pub fn demo() -> Scene {
+        use crate::i18n::tr;
+        let mut s = Scene::empty();
+        s.objects[0].material = find_material("Y2K Schachbrett").unwrap();
+        s.objects[0].name = tr("Schachbrettboden").into();
+        // distant mountains
+        let t = s.add(Kind::Terrain);
+        {
+            let o = &mut s.objects[t];
+            o.terrain = Some(Arc::new(HeightMap::fractal(256, FractalKind::Ridges, 2000)));
+            o.pos = Vec3::new(0.0, -0.5, -70.0);
+            o.scale = Vec3::new(90.0, 16.0, 30.0);
+            o.material = find_material("Perlmutt").unwrap();
+            o.name = tr("Berge").into();
+        }
+        let mut put =
+            |kind: Kind, mat: &str, name: &'static str, pos: Vec3, scale: Vec3, rot: Vec3| {
+                let i = s.add(kind);
+                let o = &mut s.objects[i];
+                o.material = find_material(mat).unwrap();
+                o.name = tr(name).to_string();
+                o.pos = pos;
+                o.scale = scale;
+                o.rot = rot;
+            };
+        put(
+            Kind::Sphere,
+            "Y2K Chrom",
+            "Chromkugel",
+            Vec3::new(0.0, 3.2, 0.0),
+            Vec3::splat(3.2),
+            Vec3::ZERO,
+        );
+        put(
+            Kind::Torus,
+            "Holografisch",
+            "Holo-Ring",
+            Vec3::new(-8.0, 4.2, 1.5),
+            Vec3::splat(3.4),
+            Vec3::new(70.0, 30.0, 0.0),
+        );
+        put(
+            Kind::Cube,
+            "Bubblegum",
+            "Würfel",
+            Vec3::new(7.5, 2.6, 2.5),
+            Vec3::splat(1.7),
+            Vec3::new(35.0, 40.0, 20.0),
+        );
+        put(
+            Kind::Sphere,
+            "Eisglas Aqua",
+            "Glaskugel",
+            Vec3::new(-2.8, 1.4, 7.0),
+            Vec3::splat(1.4),
+            Vec3::ZERO,
+        );
+        put(
+            Kind::Pyramid,
+            "Holografisch",
+            "Pyramide",
+            Vec3::new(10.0, 3.0, -9.0),
+            Vec3::new(3.0, 3.0, 3.0),
+            Vec3::new(0.0, 20.0, 0.0),
+        );
+        put(
+            Kind::Cylinder,
+            "Neon Pink",
+            "Neonsäule",
+            Vec3::new(-12.0, 3.5, -6.0),
+            Vec3::new(0.45, 3.5, 0.45),
+            Vec3::ZERO,
+        );
+        put(
+            Kind::Cylinder,
+            "Neon Limette",
+            "Neonsäule",
+            Vec3::new(13.0, 3.0, 1.0),
+            Vec3::new(0.4, 3.0, 0.4),
+            Vec3::ZERO,
+        );
+        put(
+            Kind::Sphere,
+            "Flüssigmetall",
+            "Metallperle",
+            Vec3::new(3.6, 0.9, 6.5),
+            Vec3::splat(0.9),
+            Vec3::ZERO,
+        );
+        put(
+            Kind::Sphere,
+            "Neon Pink",
+            "Perle",
+            Vec3::new(5.4, 0.55, 8.0),
+            Vec3::splat(0.55),
+            Vec3::ZERO,
+        );
+        put(
+            Kind::Torus,
+            "Y2K Chrom",
+            "Chrom-Ring",
+            Vec3::new(2.5, 0.35, 10.0),
+            Vec3::new(1.6, 1.2, 1.6),
+            Vec3::ZERO,
+        );
+        // coloured lights
+        let l = s.add(Kind::RadialLight);
+        s.objects[l].pos = Vec3::new(-10.0, 9.0, 8.0);
+        s.objects[l].light.color = [1.0, 0.35, 0.85];
+        s.objects[l].light.intensity = 2.2;
+        s.objects[l].name = tr("Pinkes Licht").into();
+        let l = s.add(Kind::RadialLight);
+        s.objects[l].pos = Vec3::new(10.0, 8.0, 9.0);
+        s.objects[l].light.color = [0.3, 0.9, 1.0];
+        s.objects[l].light.intensity = 2.0;
+        s.objects[l].name = tr("Cyan-Licht").into();
+        s.sky = sky_presets()
+            .into_iter()
+            .find(|k| k.name == "Vaporwave")
+            .unwrap();
+        s.camera = Camera {
+            pos: Vec3::new(0.0, 6.0, 25.0),
+            yaw: 0.0,
+            pitch: -9.0,
+            fov: 58.0,
+        };
+        s.render.width = 1024;
+        s.render.height = 576;
+        s
+    }
+
+    /// The golden-hour landscape demo.
+    pub fn demo_landscape() -> Scene {
         use crate::i18n::tr;
         let mut s = Scene::empty();
         s.objects[0].material.diffuse = [0.42, 0.36, 0.26];

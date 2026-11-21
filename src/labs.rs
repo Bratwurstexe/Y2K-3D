@@ -171,6 +171,7 @@ pub fn material_lab(
                     crate::i18n::tr("Metallisch"),
                 );
                 changed |= slider(ui, &mut m.bump, 0.0..=2.0, crate::i18n::tr("Relief"));
+                changed |= slider(ui, &mut m.glow, 0.0..=2.0, crate::i18n::tr("Leuchten"));
                 ui.add_space(4.0);
                 ui.label(RichText::new(crate::i18n::tr("Optik")).strong());
                 changed |= slider(
