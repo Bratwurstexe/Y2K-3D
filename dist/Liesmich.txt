@@ -1,0 +1,61 @@
+Y2K-3D – portable Version für Windows 11
+=========================================
+
+Starten: Doppelklick auf "Y2K-3D.exe".
+Es ist keine Installation nötig. Der Ordner kann auch auf einen USB-Stick
+kopiert werden.
+
+Einstellungen (z. B. das gewählte Claude-Modell) werden nur im Unterordner
+"Daten" neben dem Programm gespeichert – nicht in Windows oder im Benutzerprofil.
+Das sind nur: gewähltes Claude-Modell, zuletzt benutzter Ordner, Bibliotheksordner.
+
+Anmeldedaten: Y2K-3D speichert keine. Für Claude nutzt es die Anmeldung, die
+auf dem Computer bereits vorhanden ist (sie gehört zu Claude Code und liegt in
+dessen eigenem Ordner). Wer sich dort abmeldet, trennt damit auch Y2K-3D.
+
+Bibliotheken der alten CD
+-------------------------
+Liegt das Programm in einem Unterordner eines alten CD-Ordners (der z. B.
+"Terrain  Maps" enthält), findet es die Geländekarten (Terrain Maps),
+Bildtexturen (Picture Textures), Bildobjekte (Picture Objects) und
+3D-Modelle (OBJ Models, DXF) automatisch.
+
+Kurzbedienung
+-------------
+- Oben "Erstellen": Gelände, Wasser, Wolken, Grundkörper, Lichter erzeugen.
+- Im Arbeitsfenster: Objekt anklicken, ziehen = verschieben
+  (Umschalt = nach oben/unten), freie Fläche ziehen = Kamera drehen,
+  Mausrad = vor/zurück, Doppelklick = Material-Labor / Gelände-Editor.
+- Links die große Kugel = Rendern, "Bild speichern" sichert das Ergebnis.
+- Unten die Zeitleiste: Zeit wählen, "+ Schlüssel" setzen, abspielen,
+  Filmstreifen-Knopf speichert die Animation als Einzelbilder.
+- Rechts "Claude": Wünsche einfach hinschreiben, z. B.
+  "Mach eine Insel im Meer bei Sonnenuntergang" – Enter schickt die
+  Nachricht ab, Umschalt+Enter macht eine neue Zeile.
+  Genutzt wird dein eigenes Claude-Abo (Pro oder Max) – kein API-Schlüssel.
+  Ist Claude Code auf dem Computer schon angemeldet, verbindet sich das
+  Programm beim Start automatisch damit. Sonst: Claude Code installieren und einmal mit
+  dem Claude-Konto angemeldet (Knopf "Mit Claude-Konto anmelden" im
+  Claude-Bereich des Programms).
+- Die Seitenleisten links und rechts lassen sich am Rand mit der Maus
+  beliebig breiter oder schmaler ziehen.
+
+Szenen werden als .l3d-Datei gespeichert. Die alten .br3-Szenen der
+Original-CD können nicht geöffnet werden (unbekanntes Dateiformat).
+
+Sprache / Language
+------------------
+Oben rechts "DE | EN" (oder Hilfe > Sprache) schaltet zwischen Deutsch und
+Englisch um (Start: Englisch). Die Wahl wird gespeichert.
+
+-----------------------------------------------------------------------------
+ENGLISH
+-----------------------------------------------------------------------------
+Y2K-3D – portable version for Windows 11. Start "Y2K-3D.exe", no installation.
+It starts in English with a rendered demo scene; switch the language with
+"DE | EN" at the top right (or Help > Language).
+Settings are kept only in the "Daten" folder next to the program. Y2K-3D
+stores no sign-in data: for Claude it uses the Claude Code sign-in that is
+already on this computer (your Pro/Max subscription, no API key). In the
+Claude box, Enter sends a message and Shift+Enter starts a new line.
+Scenes are saved as .l3d files; the original .br3 scenes can't be opened.

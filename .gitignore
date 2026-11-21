@@ -1,0 +1,6 @@
+# build output
+/target/
+
+# local test pictures and program data
+/shots/
+/Daten/

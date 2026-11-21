@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # rust-toolchain.toml pins the stable MSVC toolchain; rustup installs it on first use
+      - name: Show toolchain
+        run: rustup show
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Test
+        run: cargo test --release
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Y2K-3D-windows-x64
+          path: |
+            target/release/Y2K-3D.exe
+            dist/Liesmich.txt
+            LICENSE
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Y2K-3D ${{ github.ref_name }}
+          body: |
+            Portable Windows 10/11 (64-bit) build – no installation needed.
+
+            1. Download `Y2K-3D.exe`
+            2. Put it in any folder and double-click it
+
+            See the README for system requirements and the optional Claude assistant.
+          files: |
+            target/release/Y2K-3D.exe
+            dist/Liesmich.txt
+            LICENSE
