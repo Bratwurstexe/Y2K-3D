@@ -10,8 +10,12 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6?logo=windows)
 ![Rust](https://img.shields.io/badge/made%20with-Rust-B7410E?logo=rust)
 ![egui](https://img.shields.io/badge/UI-egui-6E56CF)
+[![Downloads](https://img.shields.io/github/downloads/Bratwurstexe/Y2K-3D/total?label=downloads&color=orange)](https://github.com/Bratwurstexe/Y2K-3D/releases)
+[![Latest release](https://img.shields.io/github/v/release/Bratwurstexe/Y2K-3D?label=release)](https://github.com/Bratwurstexe/Y2K-3D/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![Portable](https://img.shields.io/badge/install-none%20(portable)-success)
+
+**[Download the latest version](https://github.com/Bratwurstexe/Y2K-3D/releases/latest)** &nbsp;·&nbsp; ![Downloads](https://img.shields.io/github/downloads/Bratwurstexe/Y2K-3D/total?label=&color=orange&style=flat-square) downloads so far
 
 <img src="docs/images/hero.png" alt="Golden-hour demo scene rendered with Y2K-3D" width="100%">
 
@@ -41,16 +45,16 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 
 | | |
 |---|---|
-| 🏔️ **Terrain editor** | Fractal mountains, hills, ridges, canyons, dunes and craters; hydraulic & thermal erosion; smoothing, terraces, spikes, island edges; a filter curve; a paint brush; height maps from any picture (including old 8-bit palette TIFFs). Live 3D preview. |
-| ☀️ **Sky & Fog** | Sun or moon position on a draggable ball, sky / horizon / sunlight colours, procedural clouds (cover, frequency, softness, height), atmospheric haze, height fog, stars. Ten presets from clear noon to moonlit night, plus memory dots. |
-| 🎨 **Materials Lab** | Diffusion, ambience, specularity, metallic tint, bump, transparency, reflection and refraction; procedural textures (noise, marble, wood, granite, checker, stripes, height-based landscape, clouds) or picture textures. Twenty presets with live sphere previews. |
-| 🔆 **Ray tracer** | Multi-threaded and progressive (coarse blocks first, then fine detail, then adaptive anti-aliasing). Shadows, reflections, refraction, Fresnel water, spot / point / parallel lights. Fast height-field traversal and BVH-accelerated meshes. |
-| 🧱 **Objects** | Sphere, cube, cylinder, cone, torus, pyramid, disk, square, procedural stones, infinite ground / water / cloud planes, picture objects with alpha cut-outs, imported OBJ and DXF models. |
-| 🎞️ **Animation** | Keyframes for camera, objects and sun on a timeline, smooth spline motion, wireframe playback, export as a PNG frame sequence. |
-| ✨ **Claude assistant** | Describe what you want ("an island at sunset with fog over the water") and Claude builds it in the scene, using your own Claude subscription through Claude Code. No API key, nothing stored. |
-| 🖥️ **Classic workflow** | Wireframe working window with camera and orthographic views, nano preview, camera memory dots, trackball and camera cross, create / edit / sky palettes, undo / redo. |
-| 🌍 **English & German** | Switch the whole interface with one click (`DE \| EN`, top right). |
-| 📦 **Portable** | One `.exe`, no installer, no admin rights, no runtime to install. Settings live in a `Daten` folder next to the program. |
+| **Terrain editor** | Fractal mountains, hills, ridges, canyons, dunes and craters; hydraulic & thermal erosion; smoothing, terraces, spikes, island edges; a filter curve; a paint brush; height maps from any picture (including old 8-bit palette TIFFs). Live 3D preview. |
+| **Sky & Fog** | Sun or moon position on a draggable ball, sky / horizon / sunlight colours, procedural clouds (cover, frequency, softness, height), atmospheric haze, height fog, stars. Ten presets from clear noon to moonlit night, plus memory dots. |
+| **Materials Lab** | Diffusion, ambience, specularity, metallic tint, bump, transparency, reflection and refraction; procedural textures (noise, marble, wood, granite, checker, stripes, height-based landscape, clouds) or picture textures. Twenty presets with live sphere previews. |
+| **Ray tracer** | Multi-threaded and progressive (coarse blocks first, then fine detail, then adaptive anti-aliasing). Shadows, reflections, refraction, Fresnel water, spot / point / parallel lights. Fast height-field traversal and BVH-accelerated meshes. |
+| **Objects** | Sphere, cube, cylinder, cone, torus, pyramid, disk, square, procedural stones, infinite ground / water / cloud planes, picture objects with alpha cut-outs, imported OBJ and DXF models. |
+| **Animation** | Keyframes for camera, objects and sun on a timeline, smooth spline motion, wireframe playback, export as a PNG frame sequence. |
+| **Claude assistant** | Describe what you want ("an island at sunset with fog over the water") and Claude builds it in the scene, using your own Claude subscription through Claude Code. No API key, nothing stored. |
+| **Classic workflow** | Wireframe working window with camera and orthographic views, nano preview, camera memory dots, trackball and camera cross, create / edit / sky palettes, undo / redo. |
+| **English & German** | Switch the whole interface with one click (`DE \| EN`, top right). |
+| **Portable** | One `.exe`, no installer, no admin rights, no runtime to install. Settings live in a `Daten` folder next to the program. |
 
 ## Screenshots
 
@@ -92,7 +96,7 @@ No Visual C++ redistributable, .NET or other runtime is needed: the program only
 
 1. Open the [**Releases**](https://github.com/Bratwurstexe/Y2K-3D/releases) page and download `Y2K-3D.exe`.
 2. Put it in any folder (a USB stick works too) and double-click it.
-3. If Windows SmartScreen warns about an unknown publisher, click **More info → Run anyway** (the program isn't code-signed).
+3. If Windows SmartScreen warns about an unknown publisher, click **More info**, then **Run anyway** (the program isn't code-signed).
 
 Y2K-3D opens in English with a rendered demo scene. Click into the picture to get back to the wireframe.
 
@@ -103,11 +107,11 @@ Y2K-3D opens in English with a rendered demo scene. Click into the picture to ge
 3. **Look**: drag empty space (or use the right mouse button) to orbit, the mouse wheel to move forward / back, the middle button to pan. Switch to top / front / side views in the drop-down on the left.
 4. **Style it**: double-click an object for the *Materials Lab* (or the *Terrain editor* for terrains), open *Sky & Fog* for the atmosphere.
 5. **Render**: click the big ball on the left (or press **Ctrl+R**). Save the picture with **Save picture…**.
-6. **Animate** (optional): click a time on the timeline, set up the scene, press **✚ Keyframe**; repeat, then **▶** to preview or the film button to render PNG frames.
+6. **Animate** (optional): click a time on the timeline, set up the scene, press **Keyframe** (the button with the plus sign); repeat, then **Play** to preview or the film button to render PNG frames.
 
 ## The Claude assistant
 
-Open the **✨ Claude** tab on the right and simply write what you want, for example:
+Open the **Claude** tab on the right and simply write what you want, for example:
 
 - *"Make an island in the sea at sunset"*
 - *"Put a golden sphere on the mountain"*
