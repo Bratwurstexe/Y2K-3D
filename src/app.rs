@@ -126,6 +126,7 @@ pub struct App {
     help_open: bool,
     about_open: bool,
     pub terrain_editor: Option<TerrainEditor>,
+    library: crate::library::LibraryWindow,
     cam_memory: [Option<Camera>; 6],
     sky_memory: [Option<Sky>; 6],
     mat_thumbs: Vec<(Material, TextureHandle)>,
@@ -202,6 +203,7 @@ impl App {
             help_open: false,
             about_open: false,
             terrain_editor: None,
+            library: crate::library::LibraryWindow::new(),
             cam_memory: [None; 6],
             sky_memory: Default::default(),
             mat_thumbs: Vec::new(),
@@ -296,6 +298,7 @@ impl App {
             }
             "render" => self.start_render(ctx),
             "top" => self.set_view(ViewMode::Top),
+            "library" => self.library.open = true,
             "english" => crate::i18n::set_english(true),
             _ => {}
         }
@@ -696,29 +699,100 @@ impl App {
         }
     }
 
+    fn apply_library(&mut self, act: crate::library::LibAction) {
+        use crate::library::LibAction;
+        match act {
+            LibAction::ApplyTexture { diffuse, name } => {
+                if let Some(i) = self.sel_index() {
+                    let m = &mut self.scene.objects[i].material;
+                    m.texture = TexKind::Image;
+                    m.image = Some(diffuse.to_string_lossy().to_string());
+                    m.name = name;
+                    m.tex_scale = 1.0;
+                    self.status = crate::trf!("Textur „{}“ angewendet", m.name);
+                    self.mark();
+                    self.show_render = false;
+                }
+            }
+            LibAction::NewTerrain {
+                height,
+                diffuse,
+                name,
+            } => match crate::picture::open(&height) {
+                Ok(img) => {
+                    let mut hm = crate::terrain::HeightMap::from_image(&img, 256);
+                    hm.normalize();
+                    // texture height maps are fine relief: soften them into landforms
+                    hm.smooth(4);
+                    hm.normalize();
+                    let i = self.add_object(Kind::Terrain);
+                    let o = &mut self.scene.objects[i];
+                    o.terrain = Some(Arc::new(hm));
+                    o.name = name.clone();
+                    o.pos = Vec3::new(o.pos.x, 0.0, o.pos.z);
+                    o.scale = Vec3::new(24.0, 3.0, 24.0);
+                    if let Some(d) = diffuse {
+                        o.material.texture = TexKind::Image;
+                        o.material.image = Some(d.to_string_lossy().to_string());
+                        o.material.name = name;
+                        o.material.specularity = 0.0;
+                        o.material.bump = 0.3;
+                        o.material.tex_scale = 0.25;
+                    }
+                    self.mark();
+                    self.show_render = false;
+                }
+                Err(e) => self.status = crate::trf!("Bild nicht lesbar: {}", e),
+            },
+            LibAction::AddModel { mesh, color, name } => {
+                let i = self.add_object(Kind::Mesh);
+                let o = &mut self.scene.objects[i];
+                o.mesh = Some(Arc::new(mesh));
+                o.name = name.clone();
+                o.scale = Vec3::splat(3.0);
+                o.pos.y = 3.0;
+                o.material = Material {
+                    name,
+                    diffuse: color,
+                    color2: color,
+                    ambient: [color[0] * 0.4, color[1] * 0.4, color[2] * 0.45],
+                    specularity: 0.2,
+                    ..Default::default()
+                };
+                self.drop_to_ground();
+                self.mark();
+                self.show_render = false;
+            }
+        }
+    }
+
     fn import_model(&mut self) {
         let mut d = rfd::FileDialog::new()
-            .add_filter(crate::i18n::tr("3D-Modell"), &["obj", "dxf"])
+            .add_filter(
+                crate::i18n::tr("3D-Modell"),
+                &["obj", "dxf", "gltf", "glb", "stl"],
+            )
             .set_title(crate::i18n::tr("3D-Modell importieren"));
         if let Some(dir) = self.lib_dir("OBJ Models") {
             d = d.set_directory(dir);
         }
         if let Some(p) = d.pick_file() {
-            let text = match std::fs::read(&p) {
-                Ok(b) => String::from_utf8_lossy(&b).to_string(),
+            let bytes = match std::fs::read(&p) {
+                Ok(b) => b,
                 Err(e) => {
                     self.status = crate::trf!("Datei nicht lesbar: {}", e);
                     return;
                 }
             };
-            let is_dxf = p
+            let ext = p
                 .extension()
-                .map(|e| e.eq_ignore_ascii_case("dxf"))
-                .unwrap_or(false);
-            let mesh = if is_dxf {
-                TriMesh::load_dxf(&text)
-            } else {
-                TriMesh::load_obj(&text)
+                .map(|e| e.to_string_lossy().to_lowercase())
+                .unwrap_or_default();
+            let mesh = match ext.as_str() {
+                "dxf" => TriMesh::load_dxf(&String::from_utf8_lossy(&bytes)),
+                "gltf" | "glb" => crate::library::load_gltf(&p).unwrap_or_default(),
+                "stl" => crate::library::load_stl(&bytes).unwrap_or_default(),
+                _ => TriMesh::load_obj(&String::from_utf8_lossy(&bytes)),
             };
             if mesh.tris.is_empty() {
                 self.status = crate::i18n::tr("In der Datei wurden keine Flächen gefunden.").into();
@@ -1208,8 +1282,14 @@ impl App {
                     ui.close();
                 }
                 ui.separator();
+                if ui.button(crate::i18n::tr("Online-Bibliothek…")).clicked() {
+                    ui.close();
+                    self.library.open = true;
+                }
                 if ui
-                    .button(crate::i18n::tr("3D-Modell importieren (OBJ/DXF)…"))
+                    .button(crate::i18n::tr(
+                        "3D-Modell importieren (OBJ, DXF, glTF, STL)…",
+                    ))
                     .clicked()
                 {
                     ui.close();
@@ -1532,12 +1612,24 @@ impl App {
                     ui,
                     36.0,
                     false,
-                    crate::i18n::tr("3D-Modell importieren (OBJ / DXF)"),
+                    crate::i18n::tr("3D-Modell importieren (OBJ, DXF, glTF, STL)"),
                     |p, r| draw_kind_icon(p, r, Kind::Mesh),
                 )
                 .clicked()
                 {
                     self.import_model();
+                }
+                if ui
+                    .add_sized(
+                        [96.0, 36.0],
+                        egui::Button::new(RichText::new(crate::i18n::tr("Bibliothek")).strong()),
+                    )
+                    .on_hover_text(crate::i18n::tr(
+                        "Online-Bibliothek: freie Texturen und 3D-Modelle (CC0) suchen und laden",
+                    ))
+                    .clicked()
+                {
+                    self.library.open = true;
                 }
                 ui.separator();
                 for k in [Kind::RadialLight, Kind::SpotLight, Kind::ParallelLight] {
@@ -3157,6 +3249,9 @@ impl App {
     // Floating windows
 
     fn windows(&mut self, ctx: &egui::Context) {
+        if let Some(act) = self.library.show(ctx, self.selected.is_some()) {
+            self.apply_library(act);
+        }
         if self.material_lab {
             let mut open = true;
             let thumbs: Vec<(Material, egui::TextureId)> = self

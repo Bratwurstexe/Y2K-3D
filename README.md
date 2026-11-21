@@ -18,7 +18,7 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![Portable](https://img.shields.io/badge/install-none%20(portable)-success)
 
-**[Download Y2K-3D.exe](https://github.com/Bratwurstexe/Y2K-3D/releases/latest/download/Y2K-3D.exe)** &nbsp;·&nbsp; ![Downloads](https://img.shields.io/github/downloads/Bratwurstexe/Y2K-3D/total?label=&color=orange&style=flat-square) downloads so far
+**[Download Y2K-3D.exe](https://github.com/Bratwurstexe/Y2K-3D/releases/latest/download/Y2K-3D.exe)**
 
 <img src="docs/images/hero.png" alt="Golden-hour demo scene rendered with Y2K-3D" width="100%">
 
@@ -38,6 +38,7 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 - [The Claude assistant](#the-claude-assistant)
 - [Controls](#controls)
 - [Files & libraries](#files--libraries)
+- [Free asset libraries](#free-asset-libraries)
 - [Building from source](#building-from-source)
 - [Project structure](#project-structure)
 - [Roadmap](#roadmap)
@@ -52,7 +53,8 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 | **Sky & Fog** | Sun or moon position on a draggable ball, sky / horizon / sunlight colours, procedural clouds (cover, frequency, softness, height), atmospheric haze, height fog, stars. Ten presets from clear noon to moonlit night, plus memory dots. |
 | **Materials Lab** | Diffusion, ambience, specularity, metallic tint, bump, transparency, reflection and refraction; procedural textures (noise, marble, wood, granite, checker, stripes, height-based landscape, clouds) or picture textures. Twenty presets with live sphere previews. |
 | **Ray tracer** | Multi-threaded and progressive (coarse blocks first, then fine detail, then adaptive anti-aliasing). Shadows, reflections, refraction, Fresnel water, spot / point / parallel lights. Fast height-field traversal and BVH-accelerated meshes. |
-| **Objects** | Sphere, cube, cylinder, cone, torus, pyramid, disk, square, procedural stones, infinite ground / water / cloud planes, picture objects with alpha cut-outs, imported OBJ and DXF models. |
+| **Objects** | Sphere, cube, cylinder, cone, torus, pyramid, disk, square, procedural stones, infinite ground / water / cloud planes, picture objects with alpha cut-outs, imported OBJ, DXF, glTF / GLB and STL models. |
+| **Online library** | Browse, search and download free CC0 assets right inside the program: 870+ textures and 520+ 3D models from Poly Haven, 1000 materials from ambientCG. Apply a texture to the selected object with one click, turn a texture's height map into a new terrain, or drop a model into the scene. |
 | **Animation** | Keyframes for camera, objects and sun on a timeline, smooth spline motion, wireframe playback, export as a PNG frame sequence. |
 | **Claude assistant** | Describe what you want ("an island at sunset with fog over the water") and Claude builds it in the scene, using your own Claude subscription through Claude Code. No API key, nothing stored. |
 | **Classic workflow** | Wireframe working window with camera and orthographic views, nano preview, camera memory dots, trackball and camera cross, create / edit / sky palettes, undo / redo. |
@@ -72,6 +74,9 @@ Inspired by the classic landscape renderers of the late 1990s, rebuilt from scra
 </tr>
 <tr>
 <td width="50%"><img src="docs/images/ui-claude.png" alt="Claude assistant"><br><sub><b>Claude assistant</b> – type a wish, press Enter, watch the scene change.</sub></td>
+<td width="50%"><img src="docs/images/ui-library.png" alt="Online library"><br><sub><b>Online library</b> – free CC0 textures and models from Poly Haven and ambientCG.</sub></td>
+</tr>
+<tr>
 <td width="50%"><img src="docs/images/render-sunset.png" alt="Sunset render"><br><sub><b>Sunset</b> – the same scene with a different sky preset.</sub></td>
 </tr>
 <tr>
@@ -152,7 +157,7 @@ Press **Enter** to send (Shift+Enter for a new line). Claude reads a short summa
 | Scenes | `.l3d` (JSON, includes terrains and imported meshes) |
 | Rendered pictures | PNG, JPEG, BMP |
 | Animations | PNG frame sequence (`bild_0001.png`, …) |
-| 3D model import | Wavefront OBJ, AutoCAD DXF (3DFACE; Mac/Windows/Unix line endings) |
+| 3D model import | Wavefront OBJ, AutoCAD DXF (3DFACE; Mac/Windows/Unix line endings), glTF 2.0 / GLB, STL (binary and text) |
 | Pictures (terrain maps, textures, picture objects) | TIFF (incl. 8-bit palette TIFFs), PNG, JPEG, BMP |
 
 **Old CD libraries:** if `Y2K-3D.exe` sits inside (or below) a folder that contains classic library folders such as `Terrain  Maps`, `Picture Textures`, `Picture Objects` or `OBJ Models`, they show up automatically in the terrain editor, the Materials Lab and the import dialogs. You can also point the `Y2K3D_LIBRARY` environment variable at such a folder. Proprietary scene / library container formats of old commercial programs can't be opened.
@@ -204,12 +209,32 @@ src/
 ├── noise.rs      gradient noise and fractal sums
 ├── picture.rs    picture loading incl. palette TIFFs
 ├── claude.rs     Claude Code connection and scene actions
+├── library.rs    online library (Poly Haven, ambientCG), glTF and STL import
 ├── i18n.rs       English / German texts
 ├── icons.rs      hand-drawn palette icons
 └── settings.rs   portable settings next to the program
 ```
 
-Built with [eframe / egui](https://github.com/emilk/egui), [glam](https://github.com/bitshifter/glam-rs), [rayon](https://github.com/rayon-rs/rayon), [image](https://github.com/image-rs/image), [rfd](https://github.com/PolyMeilex/rfd) and [serde](https://serde.rs).
+Built with [eframe / egui](https://github.com/emilk/egui), [glam](https://github.com/bitshifter/glam-rs), [rayon](https://github.com/rayon-rs/rayon), [image](https://github.com/image-rs/image), [rfd](https://github.com/PolyMeilex/rfd), [serde](https://serde.rs), [ureq](https://github.com/algesten/ureq), [gltf](https://github.com/gltf-rs/gltf) and [zip](https://github.com/zip-rs/zip2). Free assets courtesy of [Poly Haven](https://polyhaven.com) and [ambientCG](https://ambientcg.com) (CC0).
+
+## Free asset libraries
+
+**File → Online library…** (or the **Library** button in the Create palette) opens a browser for free assets. Everything listed there is **CC0 / public domain**: free for any use, also commercial, no attribution required.
+
+| Source | What Y2K-3D can load directly |
+|---|---|
+| [Poly Haven](https://polyhaven.com) | 870+ textures (colour map + height map) and 520+ 3D models (glTF) |
+| [ambientCG](https://ambientcg.com) | 1000 of the most popular materials (colour map + height map) |
+
+What you can do with an entry:
+
+- **Apply to selection** – puts the texture on the selected object.
+- **As terrain (height map)** – creates a new terrain from the texture's height map and paints it with the texture (great with Poly Haven's *aerial* and *terrain* sets).
+- **Load into scene** – downloads a 3D model and places it on the ground.
+
+Downloads are cached in `Daten\Bibliothek` next to the program, so each asset is fetched only once and stays available offline. Downloaded textures also appear in the Materials Lab's picture list.
+
+More free sources whose files Y2K-3D opens (download in the browser, then *File → Import 3D model* or the labs): [Kenney](https://kenney.nl/assets) (CC0 low-poly packs, OBJ / GLB), [Heightmapper](https://tangrams.github.io/heightmapper/) (real-world height maps as PNG, terrain data © OpenStreetMap contributors / Nextzen), [Smithsonian 3D](https://3d.si.edu) (many CC0 museum objects, glTF), [NASA 3D Resources](https://science.nasa.gov/3d-resources/) (spacecraft and planets, STL / glTF). Please check each file's licence on its page.
 
 ## Roadmap
 

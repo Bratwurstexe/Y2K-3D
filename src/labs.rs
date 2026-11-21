@@ -125,10 +125,19 @@ pub fn material_lab(
                             changed = true;
                         }
                     }
-                    let files = library_files(
+                    let mut files = library_files(
                         root.clone(),
                         "Picture Textures",
                         &["tif", "tiff", "png", "jpg"],
+                    );
+                    files.extend(
+                        library_files(
+                            Some(crate::library::library_dir()),
+                            "Texturen",
+                            &["jpg", "png"],
+                        )
+                        .into_iter()
+                        .filter(|p| !p.to_string_lossy().ends_with("_hoehe.jpg")),
                     );
                     if !files.is_empty() {
                         egui::ComboBox::from_id_salt("pictex")

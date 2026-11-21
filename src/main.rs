@@ -5,6 +5,7 @@ mod claude;
 mod i18n;
 mod icons;
 mod labs;
+mod library;
 mod mesh;
 mod noise;
 mod picture;

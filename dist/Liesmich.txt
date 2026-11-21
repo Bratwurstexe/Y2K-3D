@@ -43,6 +43,13 @@ Kurzbedienung
 Szenen werden als .l3d-Datei gespeichert. Die alten .br3-Szenen der
 Original-CD können nicht geöffnet werden (unbekanntes Dateiformat).
 
+Online-Bibliothek
+-----------------
+Datei > Online-Bibliothek (oder der Knopf "Bibliothek" oben) zeigt freie
+CC0-Texturen und 3D-Modelle von Poly Haven und ambientCG: anklicken und
+auf das ausgewählte Objekt anwenden, als Gelände verwenden oder als Modell
+in die Szene laden. Downloads landen in "Daten\Bibliothek".
+
 Sprache / Language
 ------------------
 Oben rechts "DE | EN" (oder Hilfe > Sprache) schaltet zwischen Deutsch und
@@ -58,4 +65,6 @@ Settings are kept only in the "Daten" folder next to the program. Y2K-3D
 stores no sign-in data: for Claude it uses the Claude Code sign-in that is
 already on this computer (your Pro/Max subscription, no API key). In the
 Claude box, Enter sends a message and Shift+Enter starts a new line.
+File > Online library loads free CC0 textures and 3D models (Poly Haven,
+ambientCG); downloads are kept in "Daten\Bibliothek".
 Scenes are saved as .l3d files; the original .br3 scenes can't be opened.
